@@ -1,0 +1,1004 @@
+{
+  "name": "Angebotsvergleich – KI-Empfehlung, Notion und RAG-Chat",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "1 Eingabe\nUpload mehrerer Angebote als PDF, DOCX oder Bild.",
+        "height": 256,
+        "width": 496
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -400,
+        224
+      ],
+      "typeVersion": 1,
+      "id": "40c2b5d2-cd95-4aac-baff-199d09ad197b",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "2 Extraktion\nText aus jedem Dateityp lesen und vereinheitlichen. Bilder werden lokal mit Ollama (qwen2.5vl:7b) gelesen.",
+        "height": 592,
+        "width": 416,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        128,
+        16
+      ],
+      "typeVersion": 1,
+      "id": "2baf6d7c-961b-4ca6-8a1c-2c4b66663953",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"anbieter\": {\n      \"type\": \"string\"\n    },\n    \"datum\": {\n      \"type\": \"string\"\n    },\n    \"projekt\": {\n      \"type\": \"string\"\n    },\n    \"positionen\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"leistung\": {\n            \"type\": \"string\"\n          },\n          \"preis\": {\n            \"type\": [\"number\", \"null\"]\n          }\n        },\n        \"required\": [\n          \"leistung\",\n          \"preis\"\n        ],\n        \"additionalProperties\": false\n      }\n    },\n    \"gesamtpreis\": {\n      \"type\": [\"number\", \"null\"]\n    },\n    \"hinweise\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"anbieter\",\n    \"datum\",\n    \"projekt\",\n    \"positionen\",\n    \"gesamtpreis\",\n    \"hinweise\"\n  ],\n  \"additionalProperties\": false\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        944,
+        448
+      ],
+      "id": "e3a9ffec-429e-401a-a904-a82b7e296dd4",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        576,
+        224
+      ],
+      "id": "f748e744-68c6-4b62-a114-9f425f661e4c",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "output"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1184,
+        16
+      ],
+      "id": "e0cb9f7d-623f-4c49-a023-0d1f12f85492",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        784,
+        416
+      ],
+      "id": "720ac7b0-e5b5-4e76-931a-00696cc6ae73",
+      "name": "Groq"
+    },
+    {
+      "parameters": {
+        "content": "3 · RAG-Indexierung\nAngebotstexte lokal einbetten (qwen3-embedding:0.6b) und im In-Memory-Store speichern.",
+        "height": 352,
+        "width": 464,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        624,
+        -192
+      ],
+      "id": "306c2adf-5de3-4223-a2ed-b9d54bdb7aae",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        304,
+        896
+      ],
+      "id": "424e6c83-515c-42a3-aae4-971e9123e55f",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "content": "5 Positionen in Notion",
+        "height": 256,
+        "width": 560,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1248,
+        368
+      ],
+      "id": "945f9aca-39c6-4825-a609-2488d784b9ba",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "4 Strukturierung",
+        "height": 400,
+        "width": 352,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        720,
+        192
+      ],
+      "id": "f9ba89b0-9988-42e9-9113-288e62318961",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "6 Empfehlung",
+        "height": 336,
+        "width": 916,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1152,
+        -80
+      ],
+      "id": "a46cca52-1397-4e6c-976c-3ee7e36bc3c8",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "7 Chat\nFragen zu den Angeboten. Erst hochladen, dann chatten.",
+        "height": 400,
+        "width": 832,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -96,
+        640
+      ],
+      "id": "be1a9385-04b2-43dd-b5fa-cc175ea5370c",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "model": "qwen3-embedding:0.6b"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
+      "typeVersion": 1,
+      "position": [
+        448,
+        928
+      ],
+      "id": "c6ddb7ff-4357-4b4c-b207-fa5836bae37c",
+      "name": "Embeddings Ollama"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        1568,
+        128
+      ],
+      "id": "039fc64a-ebd0-4383-a925-6ff80e4b4da1",
+      "name": "Groq2"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.fileName }}",
+                    "rightValue": ".pdf",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "1a82e9a1-5472-40d3-99cf-fd8e72a4387f"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "5e0383b3-2d2a-4cc8-a0bc-c5d16aaba478",
+                    "leftValue": "={{ $json.fileName }}",
+                    "rightValue": ".docx",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "ab86610e-1ca0-4e45-86d6-e97a8ca224a1",
+                    "leftValue": "={{ /\\.(png|jpe?g)$/i.test($json.fileName) }}",
+                    "rightValue": "  \\.(png|jpe?g)$",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -48,
+        288
+      ],
+      "id": "6d111919-f24c-4b63-9882-1e0016ba0844",
+      "name": "Nach Dateityp routen"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        112
+      ],
+      "id": "17e28872-4b2a-483e-a9e0-0b9e55b1dca2",
+      "name": "PDF auslesen"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-docx-converter.docxToText",
+      "typeVersion": 1,
+      "position": [
+        240,
+        272
+      ],
+      "id": "a94add7b-336d-419f-b784-692d5b1ee4de",
+      "name": "DOCX auslesen"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map(item => ({\n  json: { text: item.json.response }\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        400
+      ],
+      "id": "23f0de57-da9a-416c-ab32-505178608d09",
+      "name": "Bildtext aufbereiten"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "memoryKey": {
+          "__rl": true,
+          "mode": "list",
+          "value": "vector_store_key"
+        },
+        "clearStore": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1.3,
+      "position": [
+        784,
+        -112
+      ],
+      "id": "26bb9d81-a37f-48f6-8379-d5ee43687759",
+      "name": "RAG Insert"
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $json.text }}",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "=anbieter",
+                "value": "={{ $json.text.split('\\n')[0].trim() }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        928,
+        16
+      ],
+      "id": "1af62423-748a-4912-8fb3-e41f60619bd9",
+      "name": "Data Loader"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Du bist ein Angebotsanalyst.\n\nAnalysiere den folgenden Angebotstext und extrahiere die Informationen entsprechend dem vorgegebenen JSON-Schema.\n\nRegeln:\n\n* Erkenne den Anbieter.\n* Erkenne das Datum und gib es im Format YYYY-MM-DD aus (z. B. 02.04.2026 → 2026-04-02). Ist kein Datum angegeben, verwende \"\".\n* Erkenne das Projekt.\n* Extrahiere alle angebotenen Leistungen.\n* Übernimm den Preis einer Leistung nur, wenn er eindeutig angegeben ist. Andernfalls verwende `null`.\n* Übernimm oder berechne den Gesamtpreis, wenn dieser eindeutig erkennbar ist. Andernfalls verwende `null`.\n* Übernimm alle relevanten Hinweise (z. B. Wartung, Lieferzeit, Zahlungsbedingungen oder Ausführungsfristen). Sind keine Hinweise vorhanden, verwende `null`.\n* Erfinde keine Informationen.\n* Verwende ausschließlich Informationen aus dem Angebot.\n* Gib ausschließlich die strukturierte Ausgabe gemäß dem vorgegebenen Schema zurück.\n\nAngebot:\n\n{{ $json.text }}\n",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        800,
+        224
+      ],
+      "id": "fb82612c-9d61-49a6-abb3-66a5a9e80a8c",
+      "name": "Angebot strukturieren"
+    },
+    {
+      "parameters": {
+        "jsCode": "const result = [];\n\nfor (const item of $input.all()) {\n  const { anbieter, datum, projekt, gesamtpreis, hinweise, positionen } = item.json.output;\n\n  for (const position of positionen) {\n    result.push({\n      json: {\n        anbieter,\n        datum,\n        projekt,\n        leistung: position.leistung,\n        preis: position.preis,\n        gesamtpreis,\n        hinweise,\n      },\n    });\n  }\n}\n\nreturn result;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1312,
+        448
+      ],
+      "id": "ba27be6e-274f-47c5-9c52-f31d262a0af6",
+      "name": "Positionen aufteilen"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Du erhältst mehrere Angebote im JSON-Format. Zusätzlich hast du ein Tool, mit dem du die Volltexte der Angebote durchsuchen kannst.\n\n**Aufgabe:**\nErstelle genau **einen Angebotsvergleich** über alle Angebote.\n\n**Vorgehen:**\n1. Lies die Angebotsdaten unten.\n2. Nutze das Tool, um für jeden Anbieter Hinweise, Ausschlüsse, Lieferzeiten, Gewährleistung und Zahlungsbedingungen im Originaltext zu prüfen.\n3. Erstelle danach den Vergleich.\n\n**Wichtig:**\n* Gib ausschließlich gültiges Markdown zurück, als Fließtext mit den beiden Überschriften unten, ohne Tabellen und Aufzählungen.\n* Erstelle genau **einen** Output.\n* Erfinde keine Informationen.\n* Verwende ausschließlich Informationen aus den Eingabedaten und aus den Ergebnissen des Tools.\n* Nenne bei Hinweisen und Ausschlüssen immer den Anbieternamen.\n\n**Inhalt:**\n* **Zusammenfassung:** Beschreibe die wichtigsten Unterschiede der Angebote, z. B. Leistungen, Gesamtpreise, Hinweise oder Lieferzeiten.\n* **Empfehlung:** Gib eine kurze sachliche Einschätzung auf Grundlage der vorhandenen Daten. Weise ausdrücklich auf Leistungen hin, die ein Anbieter ausschließt, weil dadurch Zusatzkosten entstehen können. Falls die Angebote unterschiedliche Gewerke betreffen und deshalb nicht direkt vergleichbar sind, weise ausdrücklich darauf hin.\nBehandle jedes Angebot in den Eingabedaten einzeln. Nenne in der Zusammenfassung alle Anbieter, keinen auslassen.\n\nHier sind die Angebotsdaten:\n\n{{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1616,
+        -48
+      ],
+      "id": "ab047702-e3dc-4d3a-8bd1-c72bf64d95d6",
+      "name": "Empfehlung erstellen",
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": " Volltexte der Angebote mit Anbietername als Metadaten. Nutze es für Details wie Gewährleistung, Zahlungsbedingungen, Ausschlüsse, Lieferzeiten und Hinweise.",
+        "memoryKey": {
+          "__rl": true,
+          "mode": "list",
+          "value": "vector_store_key"
+        },
+        "topK": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1.3,
+      "position": [
+        1696,
+        128
+      ],
+      "id": "4ff986fc-b543-4795-b83f-15fb5b9fe455",
+      "name": "RAG Suche Empfehlung"
+    },
+    {
+      "parameters": {
+        "operation": "updateMarkdown",
+        "pageId": {
+          "__rl": true,
+          "value": "NOTION_SEITEN_ID_EMPFEHLUNG",
+          "mode": "id"
+        },
+        "markdown": "={{ $json.output }}"
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 3,
+      "position": [
+        1920,
+        -48
+      ],
+      "id": "56da6dc5-fee4-438e-a602-05c1a9ac5a0d",
+      "name": "Notion Empfehlung schreiben"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        -64,
+        704
+      ],
+      "id": "48800481-66e3-44c3-b680-d3a97e110d5c",
+      "name": "Chatanfrage"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Du bist ein Assistent für den Vergleich von Bauangeboten.\n\nBeantworte Fragen zu den hochgeladenen Angeboten. Nutze dafür immer das Tool zum Durchsuchen der Angebotstexte.\n\nRegeln:\n* Antworte ausschließlich auf Grundlage der gefundenen Angebotstexte.\n* Nenne bei jeder Aussage den Anbieternamen.\n* Wenn die Information nicht in den Angeboten steht, sage das klar. Erfinde nichts.\n* Antworte kurz und sachlich auf Deutsch."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        304,
+        704
+      ],
+      "id": "b08b143b-64cd-4338-88a3-e097a2536e62",
+      "name": "Chat-Assistent"
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Volltexte der hochgeladenen Angebote mit Anbietername als Metadaten.",
+        "memoryKey": {
+          "__rl": true,
+          "mode": "list",
+          "value": "vector_store_key"
+        },
+        "topK": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1.3,
+      "position": [
+        464,
+        816
+      ],
+      "id": "716154ea-ac85-4f93-aed9-b4e2185a9f21",
+      "name": "RAG Suche Chat"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Create an empty array to store our separated files\nlet results = [];\n\n// Loop through each item that comes into this node\nfor (const item of items) {\n\n// Loop through each binary file attached to this item\n// Object.keys(item.binary || {}) gets all the file names\n// The || {} prevents errors if there's no binary data\n  for (const key of Object.keys(item.binary || {})) {\n  \n    // For each file, cr\n    results.push({\n      // The json section holds the metadata we want to access later\n      json: {\n        fileName: item.binary[key].fileName, // Store the filename so we can use it for routing\n      },\n      // The binary section holds the actual file data\n      binary: {\n        data: item.binary[key], // This is the file itself\n        },\n      });\n  }\n}\n\n// Return all the separated files as individual items\n// If 1 item had 4 files attached, we now have 4 separate items\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -192,
+        304
+      ],
+      "id": "6484bbc4-a495-4a41-80dc-6bcb488378c1",
+      "name": "Dateien aufteilen"
+    },
+    {
+      "parameters": {
+        "model": "qwen3-embedding:0.6b"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
+      "typeVersion": 1,
+      "position": [
+        784,
+        16
+      ],
+      "id": "5016436b-aecd-4608-bfc0-51d6e50ee2bf",
+      "name": "Embeddings Insert"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "dataSourceId": {
+          "__rl": true,
+          "value": "NOTION_DATENBANK_ID_ANGEBOTSANALYSE",
+          "mode": "id"
+        },
+        "title": "={{ $json.anbieter }}",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Projekt|rich_text",
+              "textContent": "={{ $json.projekt }}"
+            },
+            {
+              "key": "Datum|date",
+              "includeTime": false,
+              "date": "={{ $json.datum }}"
+            },
+            {
+              "key": "Gesamtpreis|number",
+              "numberValue": "={{ $json.gesamtpreis }}"
+            },
+            {
+              "key": "Hinweise|rich_text",
+              "textContent": "={{ $json.hinweise }}"
+            },
+            {
+              "key": "Positionen|multi_select",
+              "multiSelectValue": "={{ String($json.leistung ?? '').split(',').map(s => s.trim()).filter(Boolean) }}"
+            },
+            {
+              "key": "Preis pro Posiion|number",
+              "numberValue": "={{ $json.preis }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 3,
+      "position": [
+        1680,
+        432
+      ],
+      "id": "110f04de-72e3-4b04-9c63-e841c05a178a",
+      "name": "Notion Positionen anlegen",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        192,
+        896
+      ],
+      "id": "f9cb81dc-70c9-433c-9a11-699ca4315d7f",
+      "name": "Groq Chat"
+    },
+    {
+      "parameters": {
+        "content": "## Angebotsvergleich Bau – KI-Empfehlung und RAG-Chat\n\nVergleicht konkurrierende Angebote zu einem Bauvorhaben, legt die Positionen in Notion an, erstellt eine KI-Empfehlung und beantwortet Fragen per Chat.\n\nGelb Eingabe · Lila Daten · Grün KI · Blau Ausgabe\n\n| Phase | Was passiert |\n|---|---|\n| 1 · Eingabe | Upload mehrerer Angebote (PDF, DOCX, Bild) |\n| 2 · Extraktion | Text je Dateityp auslesen und vereinheitlichen |\n| 3 · RAG-Indexierung | Texte lokal einbetten und speichern |\n| 4 · Strukturierung | Anbieter, Leistungen, Preise, Hinweise als JSON |\n| 5 · Positionen | Jede Leistung als Eintrag in Notion |\n| 6 · Empfehlung | Vergleich aller Angebote, Details per RAG |\n| 7 · Chat | Fragen zu den Angeboten |\n\n**Tech-Stack:** n8n · Groq · Ollama (qwen3-embedding:0.6b, qwen2.5vl:7b) · Notion\n\n**Hinweise**\n- Erst Formular absenden, dann chatten.\n- Vector Store ist In-Memory: nach Neustart leer.\n- Alle Vector Stores brauchen dasselbe Embedding-Modell und denselben Memory Key.\n- Insert-Zweig muss oberhalb von Phase 4 liegen (Ausführungsreihenfolge).\n\nÜbungsprojekt – Testangebote: Werkskolleg GmbH für berufliche Qualifizierung (fiktiv, Rechte beim Herausgeber)",
+        "height": 624,
+        "width": 944,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -832,
+        -416
+      ],
+      "id": "99a58d4b-c35c-4e8b-90a9-c1cbf69e54e6",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "amount": 60
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1408,
+        16
+      ],
+      "id": "e2ca087f-1a90-454b-aef5-230aaa977153",
+      "name": "Warten (Groq-Limit)"
+    },
+    {
+      "parameters": {
+        "formTitle": "Angebotsvergleich",
+        "formDescription": "Laden Sie konkurrierende Angebote hoch (PDF, DOCX oder Bild). Die KI vergleicht sie und erstellt eine Empfehlung in Notion.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Angebote",
+              "fieldType": "file"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        -352,
+        304
+      ],
+      "id": "d4bcf33c-ff65-4871-bd47-a01137fb9ac5",
+      "name": "Angebotsvergleich"
+    },
+    {
+      "parameters": {
+        "operation": "binaryToPropery",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        144,
+        416
+      ],
+      "id": "61b6636b-e2c5-4043-aa5d-3737b1b45c8f",
+      "name": "Bild in Base64"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:11434/api/generate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "=    {{ JSON.stringify({ model: \"qwen2.5vl:7b\", prompt: \"Lies dieses Angebot vollständig ab. Gib ausschließlich den Dokumenttext zurück: Anbieter, Datum, Projekt, alle Leistungen mit Preisen, Gesamtpreis und Hinweise. Erfinde nichts.\", images: [$json.data], stream: false, options: { temperature: 0, num_ctx: 8192 } }) }}",
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        288,
+        416
+      ],
+      "id": "7c1d4573-b7b8-4f0f-a8bc-fc269bf757ca",
+      "name": "Bild auslesen (lokal)",
+      "retryOnFail": true
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Angebot strukturieren",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Angebot strukturieren",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RAG Insert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Warten (Groq-Limit)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Angebot strukturieren",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Chat-Assistent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Ollama": {
+      "ai_embedding": [
+        [
+          {
+            "node": "RAG Suche Chat",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Empfehlung erstellen",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nach Dateityp routen": {
+      "main": [
+        [
+          {
+            "node": "PDF auslesen",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "DOCX auslesen",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Bild in Base64",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PDF auslesen": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DOCX auslesen": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Bildtext aufbereiten": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "RAG Insert",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Angebot strukturieren": {
+      "main": [
+        [
+          {
+            "node": "Positionen aufteilen",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Positionen aufteilen": {
+      "main": [
+        [
+          {
+            "node": "Notion Positionen anlegen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Empfehlung erstellen": {
+      "main": [
+        [
+          {
+            "node": "Notion Empfehlung schreiben",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RAG Suche Empfehlung": {
+      "ai_tool": [
+        [
+          {
+            "node": "Empfehlung erstellen",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chatanfrage": {
+      "main": [
+        [
+          {
+            "node": "Chat-Assistent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RAG Suche Chat": {
+      "ai_tool": [
+        [
+          {
+            "node": "Chat-Assistent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dateien aufteilen": {
+      "main": [
+        [
+          {
+            "node": "Nach Dateityp routen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Insert": {
+      "ai_embedding": [
+        [
+          {
+            "node": "RAG Insert",
+            "type": "ai_embedding",
+            "index": 0
+          },
+          {
+            "node": "RAG Suche Empfehlung",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Chat-Assistent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Warten (Groq-Limit)": {
+      "main": [
+        [
+          {
+            "node": "Empfehlung erstellen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Angebotsvergleich": {
+      "main": [
+        [
+          {
+            "node": "Dateien aufteilen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bild in Base64": {
+      "main": [
+        [
+          {
+            "node": "Bild auslesen (lokal)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bild auslesen (lokal)": {
+      "main": [
+        [
+          {
+            "node": "Bildtext aufbereiten",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "tags": []
+}
