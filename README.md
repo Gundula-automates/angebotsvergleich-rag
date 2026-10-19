@@ -22,7 +22,7 @@ Den Workflow habe ich selbst konzipiert, gebaut und getestet, um zu verstehen, w
 
 Übungsprojekt zum Aufbau eines RAG-Workflows in n8n. Der Workflow ist real gebaut und getestet.
 
-**Testangebote:** Die Angebote, mit denen getestet wurde, hat die **Werkskolleg GmbH für berufliche Qualifizierung** als Bildungseinrichtung zur Verfügung gestellt. Das Urheberrecht liegt bei der Werkskolleg GmbH. Firmen, Angebote und Beträge darin sind fiktiv. Die Originaldateien sind deshalb **nicht** Teil dieses Repositorys; Screenshots zeigen nur, was der Workflow daraus gemacht hat.
+**Testangebote:** Die Angebote, mit denen getestet wurde, hat die **Werkskolleg GmbH für berufliche Qualifizierung** als Bildungseinrichtung zur Verfügung gestellt. Das Urheberrecht liegt bei der Werkskolleg GmbH. Firmen, Angebote und Beträge darin sind fiktiv. Die Originaldateien sind deshalb **nicht** Teil dieses Repositorys; Screenshots zeigen nur, was der Workflow daraus gemacht hat. Die Veröffentlichung der Screenshots und der Präsentation erfolgt mit Zustimmung der Werkskolleg GmbH.
 
 ---
 
